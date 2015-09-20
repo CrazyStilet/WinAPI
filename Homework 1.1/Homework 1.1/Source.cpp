@@ -1,30 +1,30 @@
-#include<windows.h>
+п»ї#include<windows.h>
 #include<tchar.h>
 
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpczCmdLine, int nCmdShow) {
-	wchar_t MB1[] = L"Орлов Олег Александрович";
+	wchar_t MB1[] = L"РћСЂР»РѕРІ РћР»РµРі РђР»РµРєСЃР°РЅРґСЂРѕРІРёС‡";
 	MessageBox(0,
 		MB1,
-		TEXT("ФИО"),
+		TEXT("Р¤РРћ"),
 		MB_OK | MB_ICONINFORMATION);
 	
-	wchar_t MB2[] = L"Ищу работу в сфере информационных технологий";
+	wchar_t MB2[] = L"РС‰Сѓ СЂР°Р±РѕС‚Сѓ РІ СЃС„РµСЂРµ РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅС‹С… С‚РµС…РЅРѕР»РѕРіРёР№";
 	MessageBox(0,
 		MB2,
-		TEXT("Цель"),
+		TEXT("Р¦РµР»СЊ"),
 		MB_OK | MB_ICONINFORMATION);
 
-	wchar_t MB3[] = L"Родился 20 июня 1986 года, в городе Николаеве";
+	wchar_t MB3[] = L"Р РѕРґРёР»СЃСЏ 20 РёСЋРЅСЏ 1986 РіРѕРґР°, РІ РіРѕСЂРѕРґРµ РќРёРєРѕР»Р°РµРІРµ";
 	MessageBox(0,
 		MB3,
-		TEXT("Общая информация о себе"),
+		TEXT("РћР±С‰Р°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃРµР±Рµ"),
 		MB_OK | MB_ICONINFORMATION);
 	
 	int nSize = wcslen(MB1) / sizeof(wchar_t);
 	wchar_t size[4] = L"101";
 
 	MessageBox(0,
-		TEXT("абра-кадабра"),
+		TEXT("Р°Р±СЂР°-РєР°РґР°Р±СЂР°"),
 		(LPWSTR) nSize,
 		MB_OK | MB_ICONINFORMATION);
 	return 0;
