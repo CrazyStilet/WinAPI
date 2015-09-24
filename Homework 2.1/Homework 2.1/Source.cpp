@@ -1,12 +1,12 @@
-#include<Windows.h>
+п»ї#include<Windows.h>
 #include<tchar.h>
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
 
-TCHAR szClassWindow[] = TEXT("Домашнее задание");
+TCHAR szClassWindow[] = TEXT("Р”РѕРјР°С€РЅРµРµ Р·Р°РґР°РЅРёРµ");
 UINT nLB, nMB, nRB = 0;
 TCHAR buffer[100];
-TCHAR Text[] = TEXT("Нажатий левой кнопкой - 0, средней - 0, правой - 0");
+TCHAR Text[] = TEXT("РќР°Р¶Р°С‚РёР№ Р»РµРІРѕР№ РєРЅРѕРїРєРѕР№ - 0, СЃСЂРµРґРЅРµР№ - 0, РїСЂР°РІРѕР№ - 0");
 
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpczCmdLint, int nCmdShow) {
 	HWND hWnd;
@@ -60,15 +60,15 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lPar
 		PostQuitMessage(0);
 		break;
 	case WM_LBUTTONUP:
-		wsprintf(buffer, TEXT("Нажатий левой кнопкой - %d, cредней - %d, правой - %d"), ++nLB , nMB, nRB);
+		wsprintf(buffer, TEXT("РќР°Р¶Р°С‚РёР№ Р»РµРІРѕР№ РєРЅРѕРїРєРѕР№ - %d, cСЂРµРґРЅРµР№ - %d, РїСЂР°РІРѕР№ - %d"), ++nLB , nMB, nRB);
 		SetWindowText(hWnd, buffer);
 		break;
 	case WM_MBUTTONUP:
-		wsprintf(buffer, TEXT("Нажатий левой кнопкой - %d, cредней - %d, правой - %d"), nLB, ++nMB, nRB);
+		wsprintf(buffer, TEXT("РќР°Р¶Р°С‚РёР№ Р»РµРІРѕР№ РєРЅРѕРїРєРѕР№ - %d, cСЂРµРґРЅРµР№ - %d, РїСЂР°РІРѕР№ - %d"), nLB, ++nMB, nRB);
 		SetWindowText(hWnd, buffer);
 		break;
 	case WM_RBUTTONUP:
-		wsprintf(buffer, TEXT("Нажатий левой кнопкой - %d, cредней - %d, правой - %d"), nLB, nMB, ++nRB);
+		wsprintf(buffer, TEXT("РќР°Р¶Р°С‚РёР№ Р»РµРІРѕР№ РєРЅРѕРїРєРѕР№ - %d, cСЂРµРґРЅРµР№ - %d, РїСЂР°РІРѕР№ - %d"), nLB, nMB, ++nRB);
 		SetWindowText(hWnd, buffer);
 		break;
 	default:
