@@ -1,9 +1,9 @@
-#include<Windows.h>
+ï»¿#include<Windows.h>
 #include<tchar.h>
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
 
-TCHAR szClassWindow[] = TEXT("Êàðêàñíîå ïðèëîæåíèå");
+TCHAR szClassWindow[] = TEXT("ÐšÐ°Ñ€ÐºÐ°ÑÐ½Ð¾Ðµ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ");
 
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpszCmdLine, int nCmdShow)
 {
@@ -28,7 +28,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpszCmdLine, int 
 		return 0;
 	}
 		
-	hWnd = CreateWindowEx(0, szClassWindow, TEXT("Äîìàøíåå çàäàíèå 2"),
+	hWnd = CreateWindowEx(0, szClassWindow, TEXT("Ð”Ð¾Ð¼Ð°ÑˆÐ½ÐµÐµ Ð·Ð°Ð´Ð°Ð½Ð¸Ðµ 2"),
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, NULL, NULL, hInst, NULL);
 
@@ -59,15 +59,15 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lPar
 						   int y = HIWORD(lParam);
 						   if(x > rect.left + 10 && x < rect.right - 10 && y > rect.top + 10 && y < rect.bottom - 10)
 						   {
-							   wsprintf(str, TEXT("Âíóòðè ïðÿìîóãîëüíèêà"));
+							   wsprintf(str, TEXT("Ð’Ð½ÑƒÑ‚Ñ€Ð¸ Ð¿Ñ€ÑÐ¼Ð¾ÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸ÐºÐ°"));
 						   }
 						   else if(x == rect.left + 10 || x == rect.right - 10 || y == rect.top + 10 || y == rect.bottom - 10)
 						   {
-							   wsprintf(str, TEXT("Íà ãðàíèöå ïðÿìîóãîëüíèêà"));
+							   wsprintf(str, TEXT("ÐÐ° Ð³Ñ€Ð°Ð½Ð¸Ñ†Ðµ Ð¿Ñ€ÑÐ¼Ð¾ÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸ÐºÐ°"));
 						   }
 						   else
 						   {
-							   wsprintf(str, TEXT("Ñíàðóæè ïðÿìîóãîëüíèêà"));
+							   wsprintf(str, TEXT("Ð¡Ð½Ð°Ñ€ÑƒÐ¶Ð¸ Ð¿Ñ€ÑÐ¼Ð¾ÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸ÐºÐ°"));
 						   }
 	}
 		SetWindowText(hWnd, str);
@@ -78,7 +78,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lPar
 						   GetClientRect(hWnd, &rect);
 						   int x = rect.right;
 						   int y = rect.bottom;
-						   wsprintf(str, TEXT("Øèðèíà: %d, Âûñîòà: %d"), x, y);
+						   wsprintf(str, TEXT("Ð¨Ð¸Ñ€Ð¸Ð½Ð°: %d, Ð’Ñ‹ÑÐ¾Ñ‚Ð°: %d"), x, y);
 	}
 		SetWindowText(hWnd, str);
 		break;

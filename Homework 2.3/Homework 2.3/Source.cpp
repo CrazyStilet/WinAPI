@@ -1,9 +1,9 @@
-#include<Windows.h>
+п»ї#include<Windows.h>
 #include<tchar.h>
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
 
-TCHAR szClassWindow[] = TEXT("Домашнее задание");
+TCHAR szClassWindow[] = TEXT("Р”РѕРјР°С€РЅРµРµ Р·Р°РґР°РЅРёРµ");
 
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpszCmdLine, int nCmdShow)
 {
@@ -28,14 +28,14 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpszCmdLine, int 
 		return 0;
 	}
 
-	hWnd = CreateWindowEx(0, szClassWindow, TEXT("Домашнее задание 3"),
+	hWnd = CreateWindowEx(0, szClassWindow, TEXT("Р”РѕРјР°С€РЅРµРµ Р·Р°РґР°РЅРёРµ 3"),
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, NULL, NULL, hInst, NULL);
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
-	MessageBox(hWnd, TEXT("Откройте, пожалуйста, \"Калькулятор\""), TEXT("Работа с калькулятором"), MB_OK | MB_ICONINFORMATION);
+	MessageBox(hWnd, TEXT("РћС‚РєСЂРѕР№С‚Рµ, РїРѕР¶Р°Р»СѓР№СЃС‚Р°, \"РљР°Р»СЊРєСѓР»СЏС‚РѕСЂ\""), TEXT("Р Р°Р±РѕС‚Р° СЃ РєР°Р»СЊРєСѓР»СЏС‚РѕСЂРѕРј"), MB_OK | MB_ICONINFORMATION);
 
 	while(GetMessage(&lpMsg, NULL, 0, 0))
 	{
@@ -55,28 +55,28 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lPar
 		break;
 	case WM_LBUTTONDOWN:
 	{
-						   HWND h = FindWindow(TEXT("CalcFrame"), TEXT("Калькулятор"));
+						   HWND h = FindWindow(TEXT("CalcFrame"), TEXT("РљР°Р»СЊРєСѓР»СЏС‚РѕСЂ"));
 						   if(!h)
 						   {
-							   MessageBox(hWnd, TEXT("Необходимо открыть \"Калькулятор\"!"), NULL, MB_OK | MB_ICONERROR);
+							   MessageBox(hWnd, TEXT("РќРµРѕР±С…РѕРґРёРјРѕ РѕС‚РєСЂС‹С‚СЊ \"РљР°Р»СЊРєСѓР»СЏС‚РѕСЂ\"!"), NULL, MB_OK | MB_ICONERROR);
 						   }
 						   else
 						   {
-							   MessageBox(hWnd, TEXT("Сейчас начнем что-то делать с калькулятором"), TEXT("Веселуха!"), MB_OK | MB_ICONINFORMATION);
+							   MessageBox(hWnd, TEXT("РЎРµР№С‡Р°СЃ РЅР°С‡РЅРµРј С‡С‚Рѕ-С‚Рѕ РґРµР»Р°С‚СЊ СЃ РєР°Р»СЊРєСѓР»СЏС‚РѕСЂРѕРј"), TEXT("Р’РµСЃРµР»СѓС…Р°!"), MB_OK | MB_ICONINFORMATION);
 
 						   }
 	}
 		break;
 	case WM_RBUTTONDOWN:
 	{
-						   HWND h = FindWindow(TEXT("CalcFrame"), TEXT("Калькулятор"));
+						   HWND h = FindWindow(TEXT("CalcFrame"), TEXT("РљР°Р»СЊРєСѓР»СЏС‚РѕСЂ"));
 						   if(!h)
 						   {
-							   MessageBox(hWnd, TEXT("Необходимо открыть \"Калькулятор\"!"), NULL, MB_OK | MB_ICONERROR);
+							   MessageBox(hWnd, TEXT("РќРµРѕР±С…РѕРґРёРјРѕ РѕС‚РєСЂС‹С‚СЊ \"РљР°Р»СЊРєСѓР»СЏС‚РѕСЂ\"!"), NULL, MB_OK | MB_ICONERROR);
 						   }
 						   else
 						   {
-							   MessageBox(hWnd, TEXT("Извращаемся над \"Калькулятором\""), TEXT("Веселуха!"), MB_OK | MB_ICONINFORMATION);
+							   MessageBox(hWnd, TEXT("РР·РІСЂР°С‰Р°РµРјСЃСЏ РЅР°Рґ \"РљР°Р»СЊРєСѓР»СЏС‚РѕСЂРѕРј\""), TEXT("Р’РµСЃРµР»СѓС…Р°!"), MB_OK | MB_ICONINFORMATION);
 							   
 						   }
 	}
