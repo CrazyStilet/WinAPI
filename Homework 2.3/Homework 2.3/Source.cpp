@@ -62,22 +62,26 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lPar
 						   }
 						   else
 						   {
-							   MessageBox(hWnd, TEXT("Сейчас начнем что-то делать с калькулятором"), TEXT("Веселуха!"), MB_OK | MB_ICONINFORMATION);
+							   SetWindowText(h, TEXT("Calculator"));
 
 						   }
 	}
 		break;
 	case WM_RBUTTONDOWN:
 	{
-						   HWND h = FindWindow(TEXT("CalcFrame"), TEXT("Калькулятор"));
-						   if(!h)
+						   HWND h1 = FindWindow(TEXT("CalcFrame"), TEXT("Калькулятор"));
+						   HWND h2 = FindWindow(TEXT("CalcFrame"), TEXT("Calculator"));
+						   if(h1)
 						   {
-							   MessageBox(hWnd, TEXT("Необходимо открыть \"Калькулятор\"!"), NULL, MB_OK | MB_ICONERROR);
+							   MoveWindow(h1, 100, 100, 423, 423, TRUE);
+						   }
+						   else if(h2)
+						   {
+							   MoveWindow(h2, 100, 100, 423, 423, TRUE);
 						   }
 						   else
 						   {
-							   MessageBox(hWnd, TEXT("Извращаемся над \"Калькулятором\""), TEXT("Веселуха!"), MB_OK | MB_ICONINFORMATION);
-							   
+							   MessageBox(hWnd, TEXT("Необходимо открыть \"Калькулятор\"!"), NULL, MB_OK | MB_ICONERROR);
 						   }
 	}
 		break;
