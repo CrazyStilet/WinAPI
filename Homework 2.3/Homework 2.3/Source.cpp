@@ -47,7 +47,6 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpszCmdLine, int 
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
 {
-	TCHAR str[100];
 	switch(uMessage)
 	{
 	case WM_DESTROY:
