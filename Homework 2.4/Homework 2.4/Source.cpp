@@ -61,19 +61,19 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lPar
 					   }
 					   else if(wParam == VK_UP)
 					   {
-						   MoveWindow(hWnd, rectW.left, rectW.top - 10, rectC.bottom - rectC.top, rectC.right - rectC.left, TRUE);
+						   MoveWindow(hWnd, rectW.left, rectW.top - 10, rectC.right+16, rectW.bottom, TRUE);
 					   }
 					   else if(wParam == VK_DOWN)
 					   {
-						   MoveWindow(hWnd, rectW.left, rectW.top + 10, rectC.bottom - rectC.top, rectC.right - rectC.left, TRUE);
+						   MoveWindow(hWnd, rectW.left, rectW.top + 10, rectC.right+16, rectW.bottom, TRUE);
 					   }
 					   else if(wParam==VK_RIGHT)
 					   {
-						   MoveWindow(hWnd, rectW.left + 10, rectW.top, rectC.bottom - rectC.top, rectC.right - rectC.left, TRUE);
+						   MoveWindow(hWnd, rectW.left + 10, rectW.top, rectC.right+19, rectC.bottom+19, TRUE);
 					   }
 					   else if(wParam==VK_LEFT)
 					   {
-						   MoveWindow(hWnd, rectW.left - 10, rectW.top, rectC.bottom - rectC.top, rectC.right - rectC.left, TRUE);
+						   MoveWindow(hWnd, rectW.left - 10, rectW.top, rectC.right+19, rectC.bottom+19, TRUE);
 					   }
 	}
 		break;
