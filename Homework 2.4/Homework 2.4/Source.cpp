@@ -52,28 +52,32 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lPar
 		break;
 	case WM_KEYDOWN:
 	{
-					   RECT rectW,rectC;
-					   GetWindowRect(hWnd, &rectW);
-					   GetClientRect(hWnd, &rectC);
+					   RECT rect;
+					   GetWindowRect(hWnd, &rect);
+
 					   if(wParam == VK_RETURN)
 					   {
 						   MoveWindow(hWnd, 0, 0, 300, 300, TRUE);
 					   }
 					   else if(wParam == VK_UP)
 					   {
-						   MoveWindow(hWnd, rectW.left, rectW.top - 10, rectC.right+16, rectW.bottom, TRUE);
+						   rect.top -= 10;
+						   MoveWindow(hWnd, rect.left, rect.top, rect.right-rect.left, rect.bottom-rect.top-10, TRUE);
 					   }
 					   else if(wParam == VK_DOWN)
 					   {
-						   MoveWindow(hWnd, rectW.left, rectW.top + 10, rectC.right+16, rectW.bottom, TRUE);
+						   rect.top += 10;
+						   MoveWindow(hWnd, rect.left, rect.top, rect.right-rect.left, rect.bottom-rect.top+10, TRUE);
 					   }
 					   else if(wParam==VK_RIGHT)
 					   {
-						   MoveWindow(hWnd, rectW.left + 10, rectW.top, rectC.right+19, rectC.bottom+19, TRUE);
+						   rect.left += 10;
+						   MoveWindow(hWnd, rect.left, rect.top, rect.right - rect.left + 10, rect.bottom-rect.top, TRUE);
 					   }
 					   else if(wParam==VK_LEFT)
 					   {
-						   MoveWindow(hWnd, rectW.left - 10, rectW.top, rectC.right+19, rectC.bottom+19, TRUE);
+						   rect.left -= 10;
+						   MoveWindow(hWnd, rect.left, rect.top, rect.right - rect.left - 10, rect.bottom-rect.top, TRUE);
 					   }
 	}
 		break;
