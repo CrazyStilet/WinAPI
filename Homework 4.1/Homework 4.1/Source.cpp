@@ -81,6 +81,11 @@ BOOL CALLBACK DlgProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
 					EnableWindow(hResult, 1);
 				}
 			}
+			else
+			{
+				SetWindowText(hAnswer, TEXT("Ответ"));
+				EnableWindow(hResult, 0);
+			}
 		}
 		if (LOWORD(wParam) == IDC_RESULT)
 		{
