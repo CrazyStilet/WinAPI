@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <windowsx.h>
 #include <string>
+#include <tchar.h>
 #include "resource.h"
 
 #define EMPTY "\0"

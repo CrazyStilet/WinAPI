@@ -1,4 +1,17 @@
-#include"CalcDlg.h"
+﻿#include"CalcDlg.h"
+
+void Plus(bool &historyEmpty, HWND &hEdit1, TCHAR *firstNumber, TCHAR *operation, TCHAR *buf, HWND &hEdit2, TCHAR *history, int &count, TCHAR *lastOperation, TCHAR *secondNumber, TCHAR *answer,bool &divideByZero);
+void Minus(bool &historyEmpty, HWND &hEdit1, TCHAR *firstNumber, TCHAR *operation, TCHAR *buf, HWND &hEdit2, TCHAR *history, int &count, TCHAR *lastOperation, TCHAR *secondNumber, TCHAR *answer, bool &divideByZero);
+void Multiply(bool &historyEmpty, HWND &hEdit1, TCHAR *firstNumber, TCHAR *operation, TCHAR *buf, HWND &hEdit2, TCHAR *history, int &count, TCHAR *lastOperation, TCHAR *secondNumber, TCHAR *answer, bool &divideByZero);
+void Divide(bool &historyEmpty, HWND &hEdit1, TCHAR *firstNumber, TCHAR *operation, TCHAR *buf, HWND &hEdit2, TCHAR *history, int &count, TCHAR *lastOperation, TCHAR *secondNumber, TCHAR *answer, bool &divideByZero);
+void operationPlus(double &nResult, double &nFirstNumber, double &nSecondNumber, TCHAR *answer, HWND &hEdit1, TCHAR*buf, TCHAR*secondNumber, TCHAR*operation, TCHAR*history, HWND &hEdit2, TCHAR*firstNumber, int &count, TCHAR *lastOperation, bool &divideByZero);
+void operationMinus(double &nResult, double &nFirstNumber, double &nSecondNumber, TCHAR*answer, HWND &hEdit1, TCHAR*buf, TCHAR *secondNumber, TCHAR *operation, TCHAR*history, HWND&hEdit2, TCHAR*firstNumber, int &count, TCHAR*lastOperation, bool &divideByZero);
+void operationMultiply(double &nResult, double &nFirstNumber, double &nSecondNumber, TCHAR*answer, HWND &hEdit1, TCHAR*buf, TCHAR *secondNumber, TCHAR *operation, TCHAR*history, HWND&hEdit2, TCHAR*firstNumber, int &count, TCHAR*lastOperation, bool &divideByZero);
+void operationDivide(double &nResult, double &nFirstNumber, double &nSecondNumber, TCHAR*answer, HWND &hEdit1, TCHAR*buf, TCHAR *secondNumber, TCHAR *operation, TCHAR*history, HWND&hEdit2, TCHAR*firstNumber, int &count, TCHAR*lastOperation, bool &divideByZero);
+void OneDivideX(HWND &hEdit1,bool &divideByZero,HWND &hEdit2,TCHAR *lastOperation,TCHAR *operation,TCHAR *answer,TCHAR *buf,TCHAR *history, int &count,TCHAR *firstNumber);
+void Backspace(HWND &hEdit1,TCHAR *buf, int &size);
+void Sqrt(TCHAR *buf,TCHAR *answer, HWND &hEdit1, TCHAR *history, HWND &hEdit2, TCHAR *firstNumber,int &count,bool &historyEmpty);
+void PlusMinus(TCHAR *buf, bool&bufZero, HWND &hEdit1);
 
 CalcDlg* CalcDlg::ptr = NULL;
 
@@ -55,328 +68,69 @@ void CalcDlg::Cls_OnCommand(HWND hwnd, int id, HWND hwndFocus,
 	static TCHAR secondNumber[10] = {0};
 	static TCHAR answer[25] = {0};
 	static TCHAR history[100] = {0};
+	static bool divideByZero = false;
 	TCHAR buf[25] = {0};
 	GetWindowText(hEdit1, buf, 25);
 	int size = SendMessage(hEdit1, EM_LINELENGTH, 0, 0);
 	bool secondEmpty = !lstrcmp(secondNumber, TEXT(EMPTY)),
 		historyEmpty = !lstrcmp(history, TEXT(EMPTY)),
 		bufZero = !lstrcmp(buf, TEXT("0"));
-		/*change = !lstrcmp(answer, buf);
-	static bool changeAnswer = true;*/
 	static int count = 0;
 	static bool comma = false;
-	/*if (codeNotify == EN_CHANGE)
-	{
-		MessageBox(hwnd, TEXT("More"), TEXT("More"), MB_OK | MB_ICONINFORMATION);
-		
-		char buffer[25];
-		GetWindowText(hEdit1, (LPWSTR)buffer, 25);
-		int size = strlen(buffer);
-		if (size > 10)
-		{
-			MessageBox(hwnd, TEXT("More"), TEXT("More"), MB_OK | MB_ICONINFORMATION);
-		}
-	}*/
-	
-	if (id == IDC_ZERO)
-	{
-		if (size >= 10)
-		{
-			MessageBeep(0xFFFFFFFF);
-		}
-		else
-		{
-			if (!bufZero)
-			{
-				if (count != 0)
-				{
-					lstrcat(buf, TEXT("0"));
-					SetWindowText(hEdit1, buf);
-				}
-				else
-				{
-					lstrcpy(buf, TEXT("0"));
-					SetWindowText(hEdit1, buf);
-					count++;
-				}
 
-				/*if (historyEmpty)
-				{
-					lstrcat(buf, TEXT("0"));
-					SetWindowText(hEdit1, buf);
-				}
-				else
-				{
-					lstrcpy(buf, TEXT("0"));
-					SetWindowText(hEdit1, TEXT("0"));
-				}*/
-			}
-		}
-	}
-	else if (id == IDC_ONE)
+	if (id == IDC_NULL)
 	{
-		if (size >= 10)
+		SetWindowText(hEdit1, TEXT("0"));
+		SetWindowText(hEdit2, TEXT(""));
+		lstrcpy(firstNumber, TEXT(EMPTY));
+		lstrcpy(operation, TEXT(EMPTY));
+		lstrcpy(lastOperation, TEXT(EMPTY));
+		lstrcpy(secondNumber, TEXT(EMPTY));
+		lstrcpy(answer, TEXT(EMPTY));
+		lstrcpy(history, TEXT(EMPTY));
+		divideByZero = false;
+	}
+	else if (id == IDC_NULL2)
+	{
+		SetWindowText(hEdit1, TEXT("0"));
+		lstrcpy(firstNumber, answer);
+		lstrcpy(operation, TEXT(EMPTY));
+		lstrcpy(secondNumber, TEXT(EMPTY));
+		lstrcpy(answer, TEXT(EMPTY));
+		divideByZero = false;
+	}
+
+	if (divideByZero)
+	{
+		MessageBeep(0xFFFFFFFF);
+	}
+	else
+	{
+		if (id == IDC_ZERO)
 		{
-			MessageBeep(0xFFFFFFFF);
-		}
-		else
-		{
-			if (bufZero)
+			if (size >= 10)
 			{
-				SetWindowText(hEdit1, TEXT("1"));
-				count++;
+				MessageBeep(0xFFFFFFFF);
 			}
 			else
 			{
-				if (count != 0)
+				if (!bufZero)
 				{
-					lstrcat(buf, TEXT("1"));
-					SetWindowText(hEdit1, buf);
-				}
-				else
-				{
-					lstrcpy(buf, TEXT("1"));
-					SetWindowText(hEdit1, buf);
-					count++;
-				}
-			}
-		}
-	}
-	else if (id == IDC_TWO)
-	{
-		if (size >= 10)
-		{
-			MessageBeep(0xFFFFFFFF);
-		}
-		else
-		{
-			if (bufZero)
-			{
-				SetWindowText(hEdit1, TEXT("2"));
-				count++;
-			}
-			else
-			{
-				if (count != 0)
-				{
-					lstrcat(buf, TEXT("2"));
-					SetWindowText(hEdit1, buf);
-				}
-				else
-				{
-					lstrcpy(buf, TEXT("2"));
-					SetWindowText(hEdit1, buf);
-					count++;
+					if (count != 0)
+					{
+						lstrcat(buf, TEXT("0"));
+						SetWindowText(hEdit1, buf);
+					}
+					else
+					{
+						lstrcpy(buf, TEXT("0"));
+						SetWindowText(hEdit1, buf);
+						count++;
+					}
 				}
 			}
 		}
-	}
-	else if (id == IDC_THREE)
-	{
-		if (size >= 10)
-		{
-			MessageBeep(0xFFFFFFFF);
-		}
-		else
-		{
-			if (bufZero)
-			{
-				SetWindowText(hEdit1, TEXT("3"));
-				count++;
-			}
-			else
-			{
-				if (count != 0)
-				{
-					lstrcat(buf, TEXT("3"));
-					SetWindowText(hEdit1, buf);
-				}
-				else
-				{
-					lstrcpy(buf, TEXT("3"));
-					SetWindowText(hEdit1, buf);
-					count++;
-				}
-			}
-		}
-	}
-	else if (id == IDC_FOUR)
-	{
-		if (size >= 10)
-		{
-			MessageBeep(0xFFFFFFFF);
-		}
-		else
-		{
-			if (bufZero)
-			{
-				SetWindowText(hEdit1, TEXT("4"));
-				count++;
-			}
-			else
-			{
-				if (count != 0)
-				{
-					lstrcat(buf, TEXT("4"));
-					SetWindowText(hEdit1, buf);
-				}
-				else
-				{
-					lstrcpy(buf, TEXT("4"));
-					SetWindowText(hEdit1, buf);
-					count++;
-				}
-			}
-		}
-	}
-	else if (id == IDC_FIVE)
-	{
-		if (size >= 10)
-		{
-			MessageBeep(0xFFFFFFFF);
-		}
-		else
-		{
-			if (bufZero)
-			{
-				SetWindowText(hEdit1, TEXT("5"));
-				count++;
-			}
-			else
-			{
-				if (count != 0)
-				{
-					lstrcat(buf, TEXT("5"));
-					SetWindowText(hEdit1, buf);
-				}
-				else
-				{
-					lstrcpy(buf, TEXT("5"));
-					SetWindowText(hEdit1, buf);
-					count++;
-				}
-			}
-		}
-	}
-	else if (id == IDC_SIX)
-	{
-		if (size >= 10)
-		{
-			MessageBeep(0xFFFFFFFF);
-		}
-		else
-		{
-			if (bufZero)
-			{
-				SetWindowText(hEdit1, TEXT("6"));
-				count++;
-			}
-			else
-			{
-				if (count != 0)
-				{
-					lstrcat(buf, TEXT("6"));
-					SetWindowText(hEdit1, buf);
-				}
-				else
-				{
-					lstrcpy(buf, TEXT("6"));
-					SetWindowText(hEdit1, buf);
-					count++;
-				}
-			}
-		}
-	}
-	else if (id == IDC_SEVEN)
-	{
-		if (size >= 10)
-		{
-			MessageBeep(0xFFFFFFFF);
-		}
-		else
-		{
-			if (bufZero)
-			{
-				SetWindowText(hEdit1, TEXT("7"));
-				count++;
-			}
-			else
-			{
-				if (count != 0)
-				{
-					lstrcat(buf, TEXT("7"));
-					SetWindowText(hEdit1, buf);
-				}
-				else
-				{
-					lstrcpy(buf, TEXT("7"));
-					SetWindowText(hEdit1, buf);
-					count++;
-				}
-			}
-		}
-	}
-	else if (id == IDC_EIGHT)
-	{
-		if (size >= 10)
-		{
-			MessageBeep(0xFFFFFFFF);
-		}
-		else
-		{
-			if (bufZero)
-			{
-				SetWindowText(hEdit1, TEXT("8"));
-				count++;
-			}
-			else
-			{
-				if (count != 0)
-				{
-					lstrcat(buf, TEXT("8"));
-					SetWindowText(hEdit1, buf);
-				}
-				else
-				{
-					lstrcpy(buf, TEXT("8"));
-					SetWindowText(hEdit1, buf);
-					count++;
-				}
-			}
-		}
-	}
-	else if (id == IDC_NINE)
-	{
-		if (size >= 10)
-		{
-			MessageBeep(0xFFFFFFFF);
-		}
-		else
-		{
-			if (bufZero)
-			{
-				SetWindowText(hEdit1, TEXT("9"));
-				count++;
-			}
-			else
-			{
-				if (count != 0)
-				{
-					lstrcat(buf, TEXT("9"));
-					SetWindowText(hEdit1, buf);
-				}
-				else
-				{
-					lstrcpy(buf, TEXT("9"));
-					SetWindowText(hEdit1, buf);
-					count++;
-				}
-			}
-		}
-	}
-	else if (id == IDC_COMMA)
-	{
-		if (!comma)
+		else if (id == IDC_ONE)
 		{
 			if (size >= 10)
 			{
@@ -386,533 +140,427 @@ void CalcDlg::Cls_OnCommand(HWND hwnd, int id, HWND hwndFocus,
 			{
 				if (bufZero)
 				{
-					SetWindowText(hEdit1, TEXT("0,"));
-					comma = true;
+					SetWindowText(hEdit1, TEXT("1"));
 					count++;
 				}
 				else
 				{
 					if (count != 0)
 					{
-						lstrcat(buf, TEXT(","));
+						lstrcat(buf, TEXT("1"));
 						SetWindowText(hEdit1, buf);
-						comma = true;
+					}
+					else
+					{
+						lstrcpy(buf, TEXT("1"));
+						SetWindowText(hEdit1, buf);
 						count++;
 					}
-					/*else
-					{
-						lstrcpy(buf, TEXT("0,"));
-						SetWindowText(hEdit1, buf);
-						count++;
-					}*/
 				}
 			}
 		}
-		else
+		else if (id == IDC_TWO)
 		{
-			MessageBeep(0xFFFFFFFF);
+			if (size >= 10)
+			{
+				MessageBeep(0xFFFFFFFF);
+			}
+			else
+			{
+				if (bufZero)
+				{
+					SetWindowText(hEdit1, TEXT("2"));
+					count++;
+				}
+				else
+				{
+					if (count != 0)
+					{
+						lstrcat(buf, TEXT("2"));
+						SetWindowText(hEdit1, buf);
+					}
+					else
+					{
+						lstrcpy(buf, TEXT("2"));
+						SetWindowText(hEdit1, buf);
+						count++;
+					}
+				}
+			}
 		}
-	}
-	else if (id == IDC_PLUS)
-	{
-		if (historyEmpty)
+		else if (id == IDC_THREE)
 		{
-			SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)firstNumber);
+			if (size >= 10)
+			{
+				MessageBeep(0xFFFFFFFF);
+			}
+			else
+			{
+				if (bufZero)
+				{
+					SetWindowText(hEdit1, TEXT("3"));
+					count++;
+				}
+				else
+				{
+					if (count != 0)
+					{
+						lstrcat(buf, TEXT("3"));
+						SetWindowText(hEdit1, buf);
+					}
+					else
+					{
+						lstrcpy(buf, TEXT("3"));
+						SetWindowText(hEdit1, buf);
+						count++;
+					}
+				}
+			}
+		}
+		else if (id == IDC_FOUR)
+		{
+			if (size >= 10)
+			{
+				MessageBeep(0xFFFFFFFF);
+			}
+			else
+			{
+				if (bufZero)
+				{
+					SetWindowText(hEdit1, TEXT("4"));
+					count++;
+				}
+				else
+				{
+					if (count != 0)
+					{
+						lstrcat(buf, TEXT("4"));
+						SetWindowText(hEdit1, buf);
+					}
+					else
+					{
+						lstrcpy(buf, TEXT("4"));
+						SetWindowText(hEdit1, buf);
+						count++;
+					}
+				}
+			}
+		}
+		else if (id == IDC_FIVE)
+		{
+			if (size >= 10)
+			{
+				MessageBeep(0xFFFFFFFF);
+			}
+			else
+			{
+				if (bufZero)
+				{
+					SetWindowText(hEdit1, TEXT("5"));
+					count++;
+				}
+				else
+				{
+					if (count != 0)
+					{
+						lstrcat(buf, TEXT("5"));
+						SetWindowText(hEdit1, buf);
+					}
+					else
+					{
+						lstrcpy(buf, TEXT("5"));
+						SetWindowText(hEdit1, buf);
+						count++;
+					}
+				}
+			}
+		}
+		else if (id == IDC_SIX)
+		{
+			if (size >= 10)
+			{
+				MessageBeep(0xFFFFFFFF);
+			}
+			else
+			{
+				if (bufZero)
+				{
+					SetWindowText(hEdit1, TEXT("6"));
+					count++;
+				}
+				else
+				{
+					if (count != 0)
+					{
+						lstrcat(buf, TEXT("6"));
+						SetWindowText(hEdit1, buf);
+					}
+					else
+					{
+						lstrcpy(buf, TEXT("6"));
+						SetWindowText(hEdit1, buf);
+						count++;
+					}
+				}
+			}
+		}
+		else if (id == IDC_SEVEN)
+		{
+			if (size >= 10)
+			{
+				MessageBeep(0xFFFFFFFF);
+			}
+			else
+			{
+				if (bufZero)
+				{
+					SetWindowText(hEdit1, TEXT("7"));
+					count++;
+				}
+				else
+				{
+					if (count != 0)
+					{
+						lstrcat(buf, TEXT("7"));
+						SetWindowText(hEdit1, buf);
+					}
+					else
+					{
+						lstrcpy(buf, TEXT("7"));
+						SetWindowText(hEdit1, buf);
+						count++;
+					}
+				}
+			}
+		}
+		else if (id == IDC_EIGHT)
+		{
+			if (size >= 10)
+			{
+				MessageBeep(0xFFFFFFFF);
+			}
+			else
+			{
+				if (bufZero)
+				{
+					SetWindowText(hEdit1, TEXT("8"));
+					count++;
+				}
+				else
+				{
+					if (count != 0)
+					{
+						lstrcat(buf, TEXT("8"));
+						SetWindowText(hEdit1, buf);
+					}
+					else
+					{
+						lstrcpy(buf, TEXT("8"));
+						SetWindowText(hEdit1, buf);
+						count++;
+					}
+				}
+			}
+		}
+		else if (id == IDC_NINE)
+		{
+			if (size >= 10)
+			{
+				MessageBeep(0xFFFFFFFF);
+			}
+			else
+			{
+				if (bufZero)
+				{
+					SetWindowText(hEdit1, TEXT("9"));
+					count++;
+				}
+				else
+				{
+					if (count != 0)
+					{
+						lstrcat(buf, TEXT("9"));
+						SetWindowText(hEdit1, buf);
+					}
+					else
+					{
+						lstrcpy(buf, TEXT("9"));
+						SetWindowText(hEdit1, buf);
+						count++;
+					}
+				}
+			}
+		}
+		else if (id == IDC_COMMA)
+		{
+			if (!comma)
+			{
+				if (size >= 10)
+				{
+					MessageBeep(0xFFFFFFFF);
+				}
+				else
+				{
+					if (bufZero)
+					{
+						SetWindowText(hEdit1, TEXT("0."));
+						comma = true;
+						count++;
+					}
+					else
+					{
+						if (count != 0)
+						{
+							lstrcat(buf, TEXT("."));
+							SetWindowText(hEdit1, buf);
+							comma = true;
+							count++;
+						}
+						else
+						{
+							lstrcpy(buf, TEXT("0."));
+							SetWindowText(hEdit1, buf);
+							comma = true;
+							count++;
+						}
+					}
+				}
+			}
+			else
+			{
+				MessageBeep(0xFFFFFFFF);
+			}
+		}
+		else if (id == IDC_PLUS)
+		{
 			lstrcpy(operation, TEXT("+"));
-			lstrcpy(buf, firstNumber);
-			lstrcat(buf, TEXT(" "));
-			lstrcat(buf, operation);
-			SetWindowText(hEdit2, buf);
-			lstrcat(history, buf);
-			count = 0;
-			lstrcpy(lastOperation, operation);
+			Plus(historyEmpty, hEdit1, firstNumber, operation, buf, hEdit2, history, count, lastOperation, secondNumber, answer,divideByZero);
 		}
-		else if (count)
+		else if (id == IDC_MINUS)
 		{
-			SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)secondNumber);
-			lstrcpy(operation, TEXT("+"));
-			INT nFirstNumber, nSecondNumber, nResult;
-			nFirstNumber = stoi(firstNumber);
-			nSecondNumber = stoi(secondNumber);
-			if (!lstrcmp(lastOperation, TEXT("+")))
-			{
-				nResult = nFirstNumber + nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("+"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
-			}
-			else if (!lstrcmp(lastOperation, TEXT("-")))
-			{
-				nResult = nFirstNumber - nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("+"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
-			}
-			else if (!lstrcmp(lastOperation, TEXT("*")))
-			{
-				nResult = nFirstNumber * nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("+"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
-			}
-			else if (!lstrcmp(lastOperation, TEXT("/")))
-			{
-				nResult = nFirstNumber / nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("+"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
-			}
-		}
-	}
-	else if (id == IDC_MINUS)
-	{
-		if (historyEmpty)
-		{
-			SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)firstNumber);
 			lstrcpy(operation, TEXT("-"));
-			lstrcpy(buf, firstNumber);
-			lstrcat(buf, TEXT(" "));
-			lstrcat(buf, operation);
-			SetWindowText(hEdit2, buf);
-			lstrcat(history, buf);
-			count = 0;
-			lstrcpy(lastOperation, operation);
+			Minus(historyEmpty, hEdit1, firstNumber, operation, buf, hEdit2, history, count, lastOperation, secondNumber, answer, divideByZero);
 		}
-		else if (count)
+		else if (id == IDC_MULTIPLY)
 		{
-			SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)secondNumber);
-			lstrcpy(operation, TEXT("-"));
-			INT nFirstNumber, nSecondNumber, nResult;
-			nFirstNumber = stoi(firstNumber);
-			nSecondNumber = stoi(secondNumber);
-			if (!lstrcmp(lastOperation, TEXT("+")))
-			{
-				nResult = nFirstNumber + nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("-"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
-			}
-			else if (!lstrcmp(lastOperation, TEXT("-")))
-			{
-				nResult = nFirstNumber - nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("-"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
-			}
-			else if (!lstrcmp(lastOperation, TEXT("*")))
-			{
-				nResult = nFirstNumber * nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("-"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
-			}
-			else if (!lstrcmp(lastOperation, TEXT("/")))
-			{
-				nResult = nFirstNumber / nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("-"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
-			}
-		}
-	}
-	else if (id == IDC_MULTIPLY)
-	{
-		if (historyEmpty)
-		{
-			SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)firstNumber);
 			lstrcpy(operation, TEXT("*"));
-			lstrcpy(buf, firstNumber);
-			lstrcat(buf, TEXT(" "));
-			lstrcat(buf, operation);
-			SetWindowText(hEdit2, buf);
-			lstrcat(history, buf);
-			count = 0;
-			lstrcpy(lastOperation, operation);
+			Multiply(historyEmpty, hEdit1, firstNumber, operation, buf, hEdit2, history, count, lastOperation, secondNumber, answer, divideByZero);
 		}
-		else if (count)
+		else if (id == IDC_DIVIDE)
 		{
-			SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)secondNumber);
-			INT nFirstNumber, nSecondNumber, nResult;
-			nFirstNumber = stoi(firstNumber);
-			nSecondNumber = stoi(secondNumber);
-			if (!lstrcmp(lastOperation, TEXT("+")))
+			lstrcpy(operation, (TEXT("/")));
+			Divide(historyEmpty, hEdit1, firstNumber, operation, buf, hEdit2, history, count, lastOperation, secondNumber, answer, divideByZero);
+		}
+		else if (id == IDC_ONEDIVIDEX)
+		{
+			GetWindowText(hEdit1, firstNumber, 10);
+			OneDivideX(hEdit1,divideByZero,hEdit2,lastOperation,operation,answer,buf,history,count,firstNumber);	
+		}
+		else if (id == IDC_SQRT)
+		{
+			Sqrt(buf,answer,hEdit1, history, hEdit2, firstNumber, count, historyEmpty);
+		}
+		else if (id == IDC_PERCENT)
+		{
+			
+		}
+		else if (id == IDC_PLUSMINUS)
+		{
+			PlusMinus(buf, bufZero, hEdit1);
+		}
+		else if (id == IDC_BACKSPACE)
+		{
+			if (bufZero)
 			{
-				nResult = nFirstNumber + nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("*"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
+				MessageBeep(0xFFFFFFFF);
 			}
-			else if (!lstrcmp(lastOperation, TEXT("-")))
+			else
 			{
-				nResult = nFirstNumber - nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("*"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
-			}
-			else if (!lstrcmp(lastOperation, TEXT("*")))
-			{
-				nResult = nFirstNumber * nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("*"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
-			}
-			else if (!lstrcmp(lastOperation, TEXT("/")))
-			{
-				nResult = nFirstNumber / nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("*"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
+				Backspace(hEdit1,buf,size);
 			}
 		}
-	}
-	else if (id == IDC_DIVIDE)
-	{
-		if (historyEmpty)
+		else if (id == IDC_ANSWER)
 		{
-			SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)firstNumber);
-			lstrcpy(operation, TEXT("/"));
-			lstrcpy(buf, firstNumber);
-			lstrcat(buf, TEXT(" "));
-			lstrcat(buf, operation);
-			SetWindowText(hEdit2, buf);
-			lstrcat(history, buf);
-			count = 0;
-			lstrcpy(lastOperation, operation);
-		}
-		else if (count)
-		{
-			SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)secondNumber);
-			INT nFirstNumber, nSecondNumber, nResult;
-			nFirstNumber = stoi(firstNumber);
-			nSecondNumber = stoi(secondNumber);
-			if (!lstrcmp(lastOperation, TEXT("+")))
+			if (historyEmpty)
 			{
-				nResult = nFirstNumber + nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("/"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
+				MessageBeep(0xFFFFFFFF);
 			}
-			else if (!lstrcmp(lastOperation, TEXT("-")))
+			else if (count)
 			{
-				nResult = nFirstNumber - nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("/"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
+				SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)secondNumber);
+				double nFirstNumber, nSecondNumber, nResult;
+				nFirstNumber = stof(firstNumber);
+				nSecondNumber = stof(secondNumber);
+				if (!lstrcmp(lastOperation, TEXT("+")))
+				{
+					nResult = nFirstNumber + nSecondNumber;
+					_stprintf(answer, TEXT("%lf"), nResult);
+					SetWindowText(hEdit1, answer);
+					SetWindowText(hEdit2, TEXT(""));
+					lstrcpy(firstNumber, TEXT(EMPTY));
+					lstrcpy(operation, TEXT(EMPTY));
+					lstrcpy(secondNumber, TEXT(EMPTY));
+					lstrcpy(history, TEXT(EMPTY));
+					lstrcpy(answer, TEXT(EMPTY));
+					lstrcpy(lastOperation, TEXT(EMPTY));
+					count = 0;
+				}
+				else if (!lstrcmp(lastOperation, TEXT("-")))
+				{
+					nResult = nFirstNumber - nSecondNumber;
+					_stprintf(answer, TEXT("%lf"), nResult);
+					SetWindowText(hEdit1, answer);
+					SetWindowText(hEdit2, TEXT(""));
+					lstrcpy(firstNumber, TEXT(EMPTY));
+					lstrcpy(operation, TEXT(EMPTY));
+					lstrcpy(secondNumber, TEXT(EMPTY));
+					lstrcpy(history, TEXT(EMPTY));
+					lstrcpy(answer, TEXT(EMPTY));
+					lstrcpy(lastOperation, TEXT(EMPTY));
+					count = 0;
+				}
+				else if (!lstrcmp(lastOperation, TEXT("*")))
+				{
+					nResult = nFirstNumber * nSecondNumber;
+					_stprintf(answer, TEXT("%lf"), nResult);
+					SetWindowText(hEdit1, answer);
+					SetWindowText(hEdit2, TEXT(""));
+					lstrcpy(firstNumber, TEXT(EMPTY));
+					lstrcpy(operation, TEXT(EMPTY));
+					lstrcpy(secondNumber, TEXT(EMPTY));
+					lstrcpy(history, TEXT(EMPTY));
+					lstrcpy(answer, TEXT(EMPTY));
+					lstrcpy(lastOperation, TEXT(EMPTY));
+					count = 0;
+				}
+				else if (!lstrcmp(lastOperation, TEXT("/")))
+				{
+					if (nSecondNumber == 0)
+					{
+						SetWindowText(hEdit1, TEXT("Деление на ноль невозможно"));
+						MessageBeep(0xFFFFFFFF);
+						divideByZero = true;
+					}
+					else
+					{
+						nResult = nFirstNumber / nSecondNumber;
+						_stprintf(answer, TEXT("%lf"), nResult);
+						SetWindowText(hEdit1, answer);
+						SetWindowText(hEdit2, TEXT(""));
+						lstrcpy(firstNumber, TEXT(EMPTY));
+						lstrcpy(operation, TEXT(EMPTY));
+						lstrcpy(secondNumber, TEXT(EMPTY));
+						lstrcpy(history, TEXT(EMPTY));
+						lstrcpy(answer, TEXT(EMPTY));
+						lstrcpy(lastOperation, TEXT(EMPTY));
+						count = 0;
+					}
+				}
 			}
-			else if (!lstrcmp(lastOperation, TEXT("*")))
+			else if (secondEmpty)
 			{
-				nResult = nFirstNumber * nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("/"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
+				MessageBeep(0xFFFFFFFF);
 			}
-			else if (!lstrcmp(lastOperation, TEXT("/")))
-			{
-				nResult = nFirstNumber / nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("/"));
-				count = 0;
-				lstrcpy(lastOperation, operation);
-			}
-		}
-	}
-	else if (id == IDC_ONEDIVIDEX)
-	{
-		SetWindowText(hEdit1, TEXT("1/x"));
-	}
-	else if (id == IDC_SQRT)
-	{
-		SetWindowText(hEdit1, TEXT("Sqrt"));
-	}
-	else if (id == IDC_PERCENT)
-	{
-		SetWindowText(hEdit1, TEXT("Percent"));
-	}
-	else if (id == IDC_PLUSMINUS)
-	{
-		SetWindowText(hEdit1, TEXT("+-"));
-	}
-	else if (id == IDC_BACKSPACE)
-	{
-		SetWindowText(hEdit1, TEXT("Backspace"));
-	}
-	else if (id == IDC_NULL)
-	{
-		SetWindowText(hEdit1, TEXT("0"));
-		SetWindowText(hEdit2, TEXT(""));
-		lstrcpy(firstNumber, TEXT(EMPTY));
-		lstrcpy(operation, TEXT(EMPTY));
-		lstrcpy(lastOperation, TEXT(EMPTY));
-		lstrcpy(secondNumber, TEXT(EMPTY));
-		lstrcpy(answer, TEXT(EMPTY));
-		lstrcpy(history, TEXT(EMPTY));
-	}
-	else if (id == IDC_NULL2)
-	{
-		SetWindowText(hEdit1, TEXT("0"));
-		SetWindowText(hEdit2, TEXT(""));
-		lstrcpy(firstNumber, TEXT(EMPTY));
-		lstrcpy(operation, TEXT(EMPTY));
-		lstrcpy(lastOperation, TEXT(EMPTY));
-		lstrcpy(secondNumber, TEXT(EMPTY));
-		lstrcpy(answer, TEXT(EMPTY));
-		lstrcpy(history, TEXT(EMPTY));
-	}
-	else if (id == IDC_ANSWER)
-	{
-		if (historyEmpty)
-		{
-			MessageBeep(0xFFFFFFFF);
-		}
-		else if (count)
-		{
-			SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)secondNumber);
-			INT nFirstNumber, nSecondNumber, nResult;
-			nFirstNumber = stoi(firstNumber);
-			nSecondNumber = stoi(secondNumber);
-			if (!lstrcmp(lastOperation, TEXT("+")))
-			{
-				nResult = nFirstNumber + nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				/*lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("/"));
-				count = 0;
-				lstrcpy(lastOperation, operation);*/
-				SetWindowText(hEdit2, TEXT(""));
-				lstrcpy(firstNumber, TEXT(EMPTY));
-				lstrcpy(operation, TEXT(EMPTY));
-				lstrcpy(secondNumber, TEXT(EMPTY));
-				lstrcpy(history, TEXT(EMPTY));
-				lstrcpy(answer, TEXT(EMPTY));
-				lstrcpy(lastOperation, TEXT(EMPTY));
-				count = 0;
-			}
-			else if (!lstrcmp(lastOperation, TEXT("-")))
-			{
-				nResult = nFirstNumber - nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				/*lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("/"));
-				count = 0;
-				lstrcpy(lastOperation, operation);*/
-				SetWindowText(hEdit2, TEXT(""));
-				lstrcpy(firstNumber, TEXT(EMPTY));
-				lstrcpy(operation, TEXT(EMPTY));
-				lstrcpy(secondNumber, TEXT(EMPTY));
-				lstrcpy(history, TEXT(EMPTY));
-				lstrcpy(answer, TEXT(EMPTY));
-				lstrcpy(lastOperation, TEXT(EMPTY));
-				count = 0;
-			}
-			else if (!lstrcmp(lastOperation, TEXT("*")))
-			{
-				nResult = nFirstNumber * nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				/*lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("/"));
-				count = 0;
-				lstrcpy(lastOperation, operation);*/
-				SetWindowText(hEdit2, TEXT(""));
-				lstrcpy(firstNumber, TEXT(EMPTY));
-				lstrcpy(operation, TEXT(EMPTY));
-				lstrcpy(secondNumber, TEXT(EMPTY));
-				lstrcpy(history, TEXT(EMPTY));
-				lstrcpy(answer, TEXT(EMPTY));
-				lstrcpy(lastOperation, TEXT(EMPTY));
-				count = 0;
-			}
-			else if (!lstrcmp(lastOperation, TEXT("/")))
-			{
-				nResult = nFirstNumber / nSecondNumber;
-				wsprintf(answer, TEXT("%d"), nResult);
-				SetWindowText(hEdit1, answer);
-				/*lstrcpy(buf, TEXT(" "));
-				lstrcat(buf, secondNumber);
-				lstrcat(buf, TEXT(" "));
-				lstrcat(buf, operation);
-				lstrcat(history, buf);
-				SetWindowText(hEdit2, history);
-				lstrcpy(firstNumber, answer);
-				lstrcpy(operation, TEXT("/"));
-				count = 0;
-				lstrcpy(lastOperation, operation);*/
-				SetWindowText(hEdit2, TEXT(""));
-				lstrcpy(firstNumber, TEXT(EMPTY));
-				lstrcpy(operation, TEXT(EMPTY));
-				lstrcpy(secondNumber, TEXT(EMPTY));
-				lstrcpy(history, TEXT(EMPTY));
-				lstrcpy(answer, TEXT(EMPTY));
-				lstrcpy(lastOperation, TEXT(EMPTY));
-				count = 0;
-			}
-		}
-		else if (secondEmpty)
-		{
-			MessageBeep(0xFFFFFFFF);
 		}
 	}
 }
@@ -927,4 +575,367 @@ BOOL CALLBACK CalcDlg::DlgProc(HWND hwnd, UINT message,
 		HANDLE_MSG(hwnd, WM_INITDIALOG, ptr->Cls_OnInitDialog);
 	}
 	return FALSE;
+}
+
+void Plus(bool &historyEmpty, HWND &hEdit1, TCHAR *firstNumber, TCHAR *operation, TCHAR *buf, HWND &hEdit2, TCHAR *history, int &count, TCHAR *lastOperation, TCHAR *secondNumber, TCHAR *answer, bool &divideByZero)
+{
+	bool same = !lstrcmp(lastOperation, operation);
+	if (historyEmpty)
+	{
+		SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)firstNumber);
+		lstrcpy(lastOperation, operation);
+		lstrcpy(buf, firstNumber);
+		lstrcat(buf, TEXT(" "));
+		lstrcat(buf, operation);
+		SetWindowText(hEdit2, buf);
+		lstrcat(history, buf);
+		count = 0;
+	}
+	else if (count)
+	{
+		SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)secondNumber);
+		double nFirstNumber, nSecondNumber, nResult;
+		nFirstNumber = stof(firstNumber);
+		nSecondNumber = stof(secondNumber);
+		if (!lstrcmp(lastOperation, TEXT("+")))
+		{
+			operationPlus(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("-")))
+		{
+			operationMinus(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("*")))
+		{
+			operationMultiply(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("/")))
+		{
+			operationDivide(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+	}
+	else if (!same)
+	{
+		TCHAR newHistory[100] = {0};
+		int sizeHistory = lstrlen(history);
+		lstrcpyn(newHistory, history, sizeHistory);
+		lstrcat(newHistory, operation);
+		lstrcpy(lastOperation, operation);
+		SetWindowText(hEdit2, newHistory);
+		lstrcpy(history, newHistory);
+	}
+}
+
+void Minus(bool &historyEmpty, HWND &hEdit1, TCHAR *firstNumber, TCHAR *operation, TCHAR *buf, HWND &hEdit2, TCHAR *history, int &count, TCHAR *lastOperation, TCHAR *secondNumber, TCHAR *answer, bool &divideByZero)
+{
+	bool same = !lstrcmp(lastOperation, operation);
+	if (historyEmpty)
+	{
+		SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)firstNumber);
+		lstrcpy(lastOperation, operation);
+		lstrcpy(buf, firstNumber);
+		lstrcat(buf, TEXT(" "));
+		lstrcat(buf, operation);
+		SetWindowText(hEdit2, buf);
+		lstrcat(history, buf);
+		count = 0;
+	}
+	else if (count)
+	{
+		SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)secondNumber);
+		double nFirstNumber, nSecondNumber, nResult;
+		nFirstNumber = stof(firstNumber);
+		nSecondNumber = stof(secondNumber);
+		if (!lstrcmp(lastOperation, TEXT("+")))
+		{
+			operationPlus(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("-")))
+		{
+			operationMinus(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("*")))
+		{
+			operationMultiply(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("/")))
+		{
+			operationDivide(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+	}
+	else if (!same)
+	{
+		TCHAR newHistory[100] = {0};
+		int sizeHistory = lstrlen(history);
+		lstrcpyn(newHistory, history, sizeHistory);
+		lstrcat(newHistory, operation);
+		lstrcpy(lastOperation, operation);
+		SetWindowText(hEdit2, newHistory);
+		lstrcpy(history, newHistory);
+	}
+}
+
+void Multiply(bool &historyEmpty, HWND &hEdit1, TCHAR *firstNumber, TCHAR *operation, TCHAR *buf, HWND &hEdit2, TCHAR *history, int &count, TCHAR *lastOperation, TCHAR *secondNumber, TCHAR *answer, bool &divideByZero)
+{
+	bool same = !lstrcmp(lastOperation, operation);
+	if (historyEmpty)
+	{
+		SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)firstNumber);
+		lstrcpy(lastOperation, operation);
+		lstrcpy(buf, firstNumber);
+		lstrcat(buf, TEXT(" "));
+		lstrcat(buf, operation);
+		SetWindowText(hEdit2, buf);
+		lstrcat(history, buf);
+		count = 0;
+	}
+	else if (count)
+	{
+		SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)secondNumber);
+		double nFirstNumber, nSecondNumber, nResult;
+		nFirstNumber = stof(firstNumber);
+		nSecondNumber = stof(secondNumber);
+		if (!lstrcmp(lastOperation, TEXT("+")))
+		{
+			operationPlus(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("-")))
+		{
+			operationMinus(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("*")))
+		{
+			operationMultiply(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("/")))
+		{
+			operationDivide(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+	}
+	else if (!same)
+	{
+		TCHAR newHistory[100] = {0};
+		int sizeHistory = lstrlen(history);
+		lstrcpyn(newHistory, history, sizeHistory);
+		lstrcat(newHistory, operation);
+		lstrcpy(lastOperation, operation);
+		SetWindowText(hEdit2, newHistory);
+		lstrcpy(history, newHistory);
+	}
+}
+
+void Divide(bool &historyEmpty, HWND &hEdit1, TCHAR *firstNumber, TCHAR *operation, TCHAR *buf, HWND &hEdit2, TCHAR *history, int &count, TCHAR *lastOperation, TCHAR *secondNumber, TCHAR *answer, bool &divideByZero)
+{
+	bool same = !lstrcmp(lastOperation, operation);
+	if (historyEmpty)
+	{
+		SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)firstNumber);
+		lstrcpy(lastOperation, operation);
+		lstrcpy(buf, firstNumber);
+		lstrcat(buf, TEXT(" "));
+		lstrcat(buf, operation);
+		SetWindowText(hEdit2, buf);
+		lstrcat(history, buf);
+		count = 0;
+	}
+	else if (count)
+	{
+		SendMessage(hEdit1, WM_GETTEXT, 10, (LPARAM)secondNumber);
+		double nFirstNumber, nSecondNumber, nResult;
+		nFirstNumber = stof(firstNumber);
+		nSecondNumber = stof(secondNumber);
+		if (!lstrcmp(lastOperation, TEXT("+")))
+		{
+			operationPlus(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("-")))
+		{
+			operationMinus(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("*")))
+		{
+			operationMultiply(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+		else if (!lstrcmp(lastOperation, TEXT("/")))
+		{
+			operationDivide(nResult, nFirstNumber, nSecondNumber, answer, hEdit1, buf, secondNumber, operation, history, hEdit2, firstNumber, count, lastOperation, divideByZero);
+		}
+	}
+	else if (!same)
+	{
+		TCHAR newHistory[100] = {0};
+		int sizeHistory = lstrlen(history);
+		lstrcpyn(newHistory, history, sizeHistory);
+		lstrcat(newHistory, operation);
+		lstrcpy(lastOperation, operation);
+		SetWindowText(hEdit2, newHistory);
+		lstrcpy(history, newHistory);
+	}
+}
+
+void operationPlus(double &nResult, double &nFirstNumber, double &nSecondNumber, TCHAR *answer, HWND &hEdit1, TCHAR*buf, TCHAR*secondNumber, TCHAR*operation, TCHAR*history, HWND &hEdit2, TCHAR*firstNumber, int &count, TCHAR *lastOperation, bool &divideByZero)
+{
+	lstrcpy(lastOperation, operation);
+	nResult = nFirstNumber + nSecondNumber;
+	_stprintf(answer, TEXT("%lf"), nResult);
+	SetWindowText(hEdit1, answer);
+	lstrcpy(buf, TEXT(" "));
+	lstrcat(buf, secondNumber);
+	lstrcat(buf, TEXT(" "));
+	lstrcat(buf, operation);
+	lstrcat(history, buf);
+	SetWindowText(hEdit2, history);
+	lstrcpy(firstNumber, answer);
+	count = 0;
+}
+
+void operationMinus(double &nResult, double &nFirstNumber, double &nSecondNumber, TCHAR*answer, HWND &hEdit1, TCHAR*buf, TCHAR *secondNumber, TCHAR *operation, TCHAR*history, HWND&hEdit2, TCHAR*firstNumber, int &count, TCHAR*lastOperation, bool &divideByZero)
+{
+	lstrcpy(lastOperation, operation);
+	nResult = nFirstNumber - nSecondNumber;
+	_stprintf(answer, TEXT("%lf"), nResult);
+	SetWindowText(hEdit1, answer);
+	lstrcpy(buf, TEXT(" "));
+	lstrcat(buf, secondNumber);
+	lstrcat(buf, TEXT(" "));
+	lstrcat(buf, operation);
+	lstrcat(history, buf);
+	SetWindowText(hEdit2, history);
+	lstrcpy(firstNumber, answer);
+	count = 0;
+}
+
+void operationMultiply(double &nResult, double &nFirstNumber, double &nSecondNumber, TCHAR*answer, HWND &hEdit1, TCHAR*buf, TCHAR *secondNumber, TCHAR *operation, TCHAR*history, HWND&hEdit2, TCHAR*firstNumber, int &count, TCHAR*lastOperation, bool &divideByZero)
+{
+	lstrcpy(lastOperation, operation);
+	nResult = nFirstNumber * nSecondNumber;
+	_stprintf(answer, TEXT("%lf"), nResult);
+	SetWindowText(hEdit1, answer);
+	lstrcpy(buf, TEXT(" "));
+	lstrcat(buf, secondNumber);
+	lstrcat(buf, TEXT(" "));
+	lstrcat(buf, operation);
+	lstrcat(history, buf);
+	SetWindowText(hEdit2, history);
+	lstrcpy(firstNumber, answer);
+	count = 0;
+}
+
+void operationDivide(double &nResult, double &nFirstNumber, double &nSecondNumber, TCHAR*answer, HWND &hEdit1, TCHAR*buf, TCHAR *secondNumber, TCHAR *operation, TCHAR*history, HWND&hEdit2, TCHAR*firstNumber, int &count, TCHAR*lastOperation, bool &divideByZero)
+{
+	if (nSecondNumber == 0)
+	{
+		SetWindowText(hEdit1, TEXT("Деление на ноль невозможно"));
+		MessageBeep(0xFFFFFFFF);
+		divideByZero = true;
+	}
+	else
+	{
+		lstrcpy(lastOperation, operation);
+		nResult = nFirstNumber / nSecondNumber;
+		_stprintf(answer, TEXT("%lf"), nResult);
+		SetWindowText(hEdit1, answer);
+		lstrcpy(buf, TEXT(" "));
+		lstrcat(buf, secondNumber);
+		lstrcat(buf, TEXT(" "));
+		lstrcat(buf, operation);
+		lstrcat(history, buf);
+		SetWindowText(hEdit2, history);
+		lstrcpy(firstNumber, answer);
+		count = 0;
+	}
+}
+
+void OneDivideX(HWND &hEdit1, bool &divideByZero, HWND &hEdit2, TCHAR *lastOperation, TCHAR *operation, TCHAR *answer, TCHAR *buf, TCHAR *history, int &count, TCHAR*firstNumber)
+{
+	bool firstZero = !lstrcmp(firstNumber, TEXT("0"));
+	if (firstZero)
+	{
+		SetWindowText(hEdit1, TEXT("Деление на ноль невозможно"));
+		SetWindowText(hEdit2, TEXT("1 / 0"));
+		MessageBeep(0xFFFFFFFF);
+		divideByZero = true;
+	}
+	else
+	{
+		lstrcpy(lastOperation, operation);
+		double nNumber, nResult;
+		nNumber = stof(firstNumber);
+		nResult = 1 / nNumber;
+		_stprintf(answer, TEXT("%lf"), nResult);
+		SetWindowText(hEdit1, answer);
+		lstrcpy(buf, TEXT("1 / "));
+		lstrcat(buf, firstNumber);
+		lstrcat(buf, TEXT(" "));
+		lstrcat(buf, operation);
+		lstrcat(history, buf);
+		SetWindowText(hEdit2, history);
+		lstrcpy(firstNumber, answer);
+		count = 0;
+	}
+}
+
+void Backspace(HWND &hEdit1,TCHAR *buf, int &size)
+{
+	if (size == 1)
+	{
+		SetWindowText(hEdit1, TEXT("0"));
+	}
+	else
+	{
+		int sizeBuf = lstrlen(buf);
+		TCHAR newBuf[25] = {0};
+		lstrcpyn(newBuf,buf,sizeBuf);
+		SetWindowText(hEdit1, newBuf);
+	}
+}
+
+void Sqrt(TCHAR *buf, TCHAR *answer, HWND &hEdit1, TCHAR *history, HWND &hEdit2, TCHAR *firstNumber, int &count, bool &historyEmpty)
+{
+	double nNumber, nResult;
+	nNumber = stof(buf);
+	nResult = sqrt(nNumber);
+	_stprintf(answer, TEXT("%lf"), nResult);
+	SetWindowText(hEdit1, answer);
+	if (historyEmpty)
+	{
+		lstrcpy(history, TEXT("√"));
+	}
+	else
+	{
+		lstrcat(history, TEXT("√"));
+	}
+	lstrcat(history, buf);
+	SetWindowText(hEdit2, history);
+	lstrcpy(firstNumber, answer);
+	//count = 0;
+}
+
+void PlusMinus(TCHAR* buf, bool &bufZero, HWND &hEdit1)
+{
+	if (bufZero)
+	{
+		MessageBeep(0xFFFFFFFF);
+	}
+	else
+	{
+		TCHAR newBuf[2] = {0};
+		lstrcpyn(newBuf, buf, 2);
+		TCHAR newNewBuf[25] = {0};
+		if (!lstrcmp(newBuf, TEXT("-")))
+		{
+			int sizeBuf = lstrlen(buf);
+			for (int i = 0; i < sizeBuf-1; i++)
+			{
+				newNewBuf[i] = buf[i + 1];
+			}
+			SetWindowText(hEdit1, newNewBuf);
+		}
+		else
+		{
+			lstrcpy(newNewBuf, TEXT("-"));
+			lstrcat(newNewBuf, buf);
+			SetWindowText(hEdit1, newNewBuf);
+		}
+	}
 }
